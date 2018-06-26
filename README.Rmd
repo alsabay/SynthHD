@@ -2,7 +2,9 @@
 title: "README"
 author: "Al Sabay"
 date: "6/25/2018"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ## Synthesizing Heart Disease Data for Machine Learning
@@ -11,7 +13,7 @@ In many data applications especially in the medical field, data often comes in s
 This example shows how we can use the "synthpop" R package to produce anonymized data in volume for research purposes. Although the resulting synthesized data matches the "real" data characteristics, it must be clearly understood that it is not "real data" and use should only be limited to research studies using Machine and or Deep Learning.
 
 
-## Including Plots
+## Plots
 
 ```{r pressure, echo=FALSE}
 library(synthpop)
