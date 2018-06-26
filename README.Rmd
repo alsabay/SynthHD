@@ -8,9 +8,9 @@ output:
 ---
 
 ## Synthesizing Heart Disease Data for Machine Learning
-In many data applications especially in the medical field, data often comes in small samples and always subject the HIPPAA Privacy Laws. Small data samples often don't meet the Machine Learning needs.
+In many data applications especially in the medical field, data often comes in small samples and always subject the HIPPAA Privacy Laws. Small data samples often don't meet Machine Learning needs due to its lack of volume. 
 
-This example shows how we can use the "synthpop" R package to produce anonymized data in volume for research purposes. Although the resulting synthesized data matches the "real" data characteristics, it must be clearly understood that it is not "real data" and use should only be limited to research studies using Machine and or Deep Learning.
+Using the Cleveland dataset ( from http://archive.ics.uci.edu/ml/datasets/heart+disease), this example shows how we can use the "synthpop" R package to produce anonymized data in volume for research purposes. Although the resulting synthesized data matches the "real" data characteristics, it must be clearly understood that the resulting Synthesized Data is not "real data" and use should be limited to research studies (for ex: Machine and or Deep Learning).
 
 
 ## Plots
