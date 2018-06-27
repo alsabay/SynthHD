@@ -12,18 +12,21 @@ cols <- c("age", "sex", "chest_pain", "resting_bp", "cholesterol", "fast_sugar",
           "heart_def_status", "diag")
 
 df_data <- read.csv("data/cleveland14_capstone.csv", header = FALSE)
-
 colnames(df_data) <- cols
+df_data$diag[df_data$diag > 0] <- 1 # recode diagnosis (diag) to 1 (from 1,2,3,4) if heart disease exists, or 0 if no heart disease exists
 
-# recode diagnosis (diag) to 1 if heart disease exists, or 0 if no heart disease exists
-df_data$diag[df_data$diag > 0] <- 1
 
 # synthesisze a data set of 20,000 samples from cleveland dataset.
 # drop.not.used = True (means don't use any original data in the synthesized df)
-syn_cleveland <- syn(df_data, seed = 306, k = 20000, drop.not.used = TRUE)
+syn_cleveland <- syn(df_data, seed = 306, k = 50000, drop.not.used = TRUE)
+
+# write the surrogate data file
+write.table(syn_cleveland$syn, file = "data/syn_cleveland14.csv", sep = ",", row.names = FALSE, col.names = FALSE)
 
 # data frame with the synthetic data set
 df_syn <- data.frame(syn_cleveland$syn)
+
+
 # logistic regression summary
 summary(glm(diag~age+sex+chest_pain+resting_bp+cholesterol+fast_sugar+
               resting_ecg+max_hrate+exer_angina+oldpeak+slope+ca_mavesel+heart_def_status, 
@@ -35,10 +38,12 @@ summary(glm.synds(diag~age+sex+chest_pain+resting_bp+cholesterol+fast_sugar+
             data = syn_cleveland, family = "binomial"))
 
 # comparison of percentages of observed vs synthetic data
-s1 <- syn(df_data, seed = 306, k = 20000, drop.not.used = TRUE)
-s2 <- glm.synds(diag~age+sex+chest_pain+resting_bp+cholesterol+fast_sugar+
-                  resting_ecg+max_hrate+exer_angina+oldpeak+slope+ca_mavesel+heart_def_status, 
-                data = syn_cleveland, family = "binomial")
+s1 <- syn(df_data, seed = 306, k = 50000, drop.not.used = TRUE)
+
+# logistic regression fit of synthetic data
+#s2 <- glm.synds(diag~age+sex+chest_pain+resting_bp+cholesterol+fast_sugar+
+#                  resting_ecg+max_hrate+exer_angina+oldpeak+slope+ca_mavesel+heart_def_status, 
+#                data = syn_cleveland , family = "binomial")
 
 compare(s1, df_data, vars = "age")
 compare(s1, df_data, vars = "sex")
