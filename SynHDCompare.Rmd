@@ -1,3 +1,14 @@
+---
+title: "Real to Synthetic Dataset Comparison (Cleveland Dataset)"
+author: "Al Sabay"
+date: "6/27/2018"
+output: pdf_document
+---
+Cleveland Dataset http://archive.ics.uci.edu/ml/datasets/Heart+Disease
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 #########################################################################################################
 # Heart Disease Data synthesis from the Cleveland 14 dataset. 
 # Purpose: To produced synthesized data that matches original sample characteristics in order to
@@ -19,9 +30,6 @@ df_data$diag[df_data$diag > 0] <- 1 # recode diagnosis (diag) to 1 (from 1,2,3,4
 # synthesisze a data set of 20,000 samples from cleveland dataset.
 # drop.not.used = True (means don't use any original data in the synthesized df)
 syn_cleveland <- syn(df_data, seed = 306, k = 50000, drop.not.used = TRUE)
-
-# write the surrogate data file
-write.table(syn_cleveland$syn, file = "data/syn_cleveland14.csv", sep = ",", row.names = FALSE, col.names = FALSE)
 
 # data frame with the synthetic data set
 df_syn <- data.frame(syn_cleveland$syn)
@@ -45,6 +53,45 @@ s2 <- glm.synds(diag~age+sex+chest_pain+resting_bp+cholesterol+fast_sugar+
                   resting_ecg+max_hrate+exer_angina+oldpeak+slope+ca_mavesel+heart_def_status, 
                 data = syn_cleveland , family = "binomial")
 
+```
+
+## Generalized Linear Model fit for Synthesized Heart Disease Data
+
+Original data from Cleveland Dataset of 297 observations was used to synthesize a dataset of size 50,000 observations. The sysntesized dataset is used in Logistics Regression fit below.
+
+```{r cars}
+summary(glm.synds(diag~age+sex+chest_pain+resting_bp+cholesterol+fast_sugar+
+              resting_ecg+max_hrate+exer_angina+oldpeak+slope+ca_mavesel+heart_def_status, 
+            data = syn_cleveland, family = "binomial"))
+```
+
+## Z Values for fit to HD Diagnosis (diag)
+
+
+```{r, echo=FALSE}
+
+compare(s2, df_data, plot = "Z", print.coef = TRUE, return.plot = TRUE, 
+        plot.intercept = FALSE, lwd = 1, lty = 1, lcol = c("#1A3C5A","#4187BF"), 
+        dodge.height = .5, point.size = 2.5, incomplete = FALSE, population.inference = FALSE, ci.level = 0.95)
+
+```
+
+## Coefficient Values for fit to HD Diagnosis (diag)
+
+
+```{r, echo=FALSE}
+
+compare(s2, df_data, plot = "coef", print.coef = TRUE, return.plot = TRUE, 
+        plot.intercept = FALSE, lwd = 1, lty = 1, lcol = c("#1A3C5A","#4187BF"), 
+        dodge.height = .5, point.size = 2.5, incomplete = FALSE, population.inference = FALSE, ci.level = 0.95)
+
+```
+
+## Feature comparisons of Real vs. Synthetic Data
+Cleveland Dataset http://archive.ics.uci.edu/ml/datasets/Heart+Disease
+
+
+```{r, echo=FALSE}
 compare(s1, df_data, vars = "age")
 compare(s1, df_data, vars = "sex")
 compare(s1, df_data, vars = "chest_pain")
@@ -60,7 +107,4 @@ compare(s1, df_data, vars = "ca_mavesel")
 compare(s1, df_data, vars = "heart_def_status")
 compare(s1, df_data, vars = "diag")
 
-# Comparison of Model Estimates based on Synthesized and Observed Data
-compare(s2, df_data, plot = "Z", print.coef = TRUE, return.plot = TRUE, 
-        plot.intercept = FALSE, lwd = 1, lty = 1, lcol = c("#1A3C5A","#4187BF"), 
-        dodge.height = .5, point.size = 2.5, incomplete = FALSE, population.inference = FALSE, ci.level = 0.95)
+```
