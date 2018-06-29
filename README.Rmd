@@ -6,16 +6,8 @@ output:
   pdf_document: default
   html_document: default
 ---
-
-## Synthesizing Heart Disease Data for Machine Learning
-In many data applications especially in the medical field, data often comes in small samples and always subject the HIPPAA Privacy Laws. Small data samples often don't meet Machine Learning needs due to its lack of volume. 
-
-Using the Cleveland dataset ( from http://archive.ics.uci.edu/ml/datasets/heart+disease), this example shows how we can use the "synthpop" R package to produce anonymized data in volume for research purposes. Although the resulting synthesized data matches the "real" data characteristics, it must be clearly understood that the resulting Synthesized Data is not "real data" and use should be limited to research studies (for ex: Machine and or Deep Learning).
-
-
-## Plots
-
-```{r pressure, echo=FALSE}
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 library(synthpop)
 
 # read in original sample data (cleveland dataset from uci)
@@ -47,11 +39,22 @@ summary(glm.synds(diag~age+sex+chest_pain+resting_bp+cholesterol+fast_sugar+
             data = syn_cleveland, family = "binomial"))
 
 # comparison of percentages of observed vs synthetic data
-s1 <- syn(df_data, seed = 306, k = 20000, drop.not.used = TRUE)
+s1 <- syn(df_data, seed = 306, k = 50000, drop.not.used = TRUE)
+
+# logistic regression fit of synthetic data
 s2 <- glm.synds(diag~age+sex+chest_pain+resting_bp+cholesterol+fast_sugar+
                   resting_ecg+max_hrate+exer_angina+oldpeak+slope+ca_mavesel+heart_def_status, 
-                data = syn_cleveland, family = "binomial")
+                data = syn_cleveland , family = "binomial")
+```
+## Synthesizing Heart Disease Data for Machine Learning
+In many data applications especially in the medical field, data often comes in small samples and always subject the HIPPAA Privacy Laws. Small data samples often don't meet Machine Learning needs due to its lack of volume. 
 
+Using the Cleveland dataset ( from http://archive.ics.uci.edu/ml/datasets/heart+disease), this example shows how we can use the "synthpop" R package to produce anonymized data in volume for research purposes. Although the resulting synthesized data matches the "real" data characteristics, it must be clearly understood that the resulting Synthesized Data is not "real data" and use should be limited to research studies (for ex: Machine and or Deep Learning).
+
+
+## Plots
+
+```{r pressure, echo=FALSE}
 compare(s1, df_data, vars = "age")
 compare(s1, df_data, vars = "sex")
 compare(s1, df_data, vars = "chest_pain")
