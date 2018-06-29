@@ -16,7 +16,7 @@ colnames(df_data) <- cols
 df_data$diag[df_data$diag > 0] <- 1 # recode diagnosis (diag) to 1 (from 1,2,3,4) if heart disease exists, or 0 if no heart disease exists
 
 
-# synthesisze a data set of 20,000 samples from cleveland dataset.
+# synthesisze a data set of 50,000 samples from cleveland dataset.
 # drop.not.used = True (means don't use any original data in the synthesized df)
 syn_cleveland <- syn(df_data, seed = 306, k = 50000, drop.not.used = TRUE)
 
